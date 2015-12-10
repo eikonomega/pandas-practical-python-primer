@@ -105,6 +105,10 @@ In order to do this, we make use of the `flask.make_response` function.
 > ![Question](../images/question.png) What are we changing the HTTP status code
 > to?  Why is that important?
 
+> ![Extra Extra](../images/reminder.png) Notice how we've been explicit about
+> what HTTP status codes can be returned from our new function? Users of 
+> your API will appreciate this level of detail.
+
 ### There Is No Secret Ingredient: Testing
 - Drop to the command-line and try to access your new method: 
 `curl 127.0.0.1:5000/api/v1/friends/VinDi`.  You should get the following
@@ -125,5 +129,5 @@ output:
 > be immediately obvious.  What happens when we query for `BFP`?  What about
 > `bfp`?  Our API doesn't account for differences in capitalization.  Go
 > back and review [string methods](https://docs.python.org/3/library/stdtypes.html#string-methods) 
-to see how to make your API find your
-BFP friend whether the input is `BFP`, `bfp`, of `bFp`.
+> to see how to make your API find your >BFP friend whether the input is 
+> `BFP`, `bfp`, of `bFp`.

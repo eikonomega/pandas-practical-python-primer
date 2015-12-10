@@ -11,14 +11,14 @@ won't have any of the functionality that we'll be creating as we continue.
 the following content:
 
     ```python
-    from flask import Flask, jsonify
+    import flask
     
-    app = Flask(__name__)
+    api = flask.Flask(__name__)
     ```   
     
     > ![Remember?](../images/reminder.png) Can you remember how the special 
     module property `__name__` works?  You can see that it is being used as a 
-    parameter for the Flask object constructor.
+    parameter for the `flask.Flask` object constructor.
     
 - Drop to the command line and start your API by executing the `run_server.py`
 script.  You should see something like this:

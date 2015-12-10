@@ -33,10 +33,10 @@ that work with each other to comprise an application.
 - Create a file called `run_server.py` with this content:
 
     ```python
-    from friends_api.friends import app
+    from friends_api.friends import api
 
     if __name__ == '__main__':
-        app.run(debug=True, port=5000)
+        api.run(debug=True, port=5000)
     ```
 
     - This is a wrapper that will launch a simple HTTP server that will 

@@ -2,6 +2,6 @@
 This module will provide a Flask application.
 """
 
-from flask import Flask
+import flask
 
-app = Flask(__name__)
+api = flask.Flask(__name__)

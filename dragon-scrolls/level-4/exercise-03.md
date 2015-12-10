@@ -83,12 +83,12 @@ from other modules of our `friends_api` package.
     - Update `friends.py` to import the `datastore` module:
     
     ```python
-    from flask import Flask, jsonify
+    import flask
     
     from friends_api import datastore
     
     
-    app = Flask(__name__)
+    api = flask.Flask(__name__)
     ...
     ```
 

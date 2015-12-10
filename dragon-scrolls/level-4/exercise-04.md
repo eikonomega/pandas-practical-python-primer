@@ -13,23 +13,26 @@ and in the next exercise will add it for **individual resources**.
 - Add the following code to `friends.py`:
     
     ```python
-    @app.route('/api/v1/friends', methods=['GET'])
-    def get_friends():
+    @api.route('/api/v1/friends', methods=['GET'])
+    def get_friends() -> flask.Response:
         """
         Return a representation of the collection of friend resources.
         
         Returns:
             A flask.Response object.
         """
-        return jsonify({"friends": datastore.friends})
+        friends_list = datastore.friends()
+        return flask.jsonify({"friends": friends_list})
     ```
+    
 - There is a lot going on here. So let's take it line by line.
-    - The `@app.route()` is a **decorator**.  Decorators are used in Python 
+    - The `@api.route()` is a **decorator**.  Decorators are used in Python 
     programs to dynamically modify an existing function, adding additional
     processing before or after the original function.
     
-        > Decorators are pretty advanced so we won't really go into them 
-        during this class. But, feel free to ask if you really want to know ;)
+        > ![Extra Info](../images/reminder.png) Decorators are pretty 
+        > advanced so we won't really go into them 
+        > during this class. But, feel free to ask if you really want to know ;)
         
     - The `route` decorator connects your function to a
     URL and one or more HTTP methods.  Whenever the specified URL is called
@@ -38,35 +41,29 @@ and in the next exercise will add it for **individual resources**.
         `http://127.0.0.1:5000/api/v1/friends` using the `GET` to this function. 
         
     - You're familiar with the function definition statement and the docstring 
-    by now, but what is `jsonify` doing?
-        - You can guess from the docstring that it returns a flask.Response
+    by now, but what is `flask.jsonify` function doing?
+        - You might guess from the docstring that it returns a flask.Response
         object - which ultimately becomes the HTTP response from your
         API to the client.
-        - In particular, it creates a response object with a JSON payload,
+        
+        - In particular, it creates a HTTP response object with a JSON payload,
         sets the `content-type` header to `application/json` and sets to the
         status code of the response to `200 OK`.
+        
         - You can see from the example that you can pass a dictionary to it,
-        which will then become the JSON payload.
+        which will then become the JSON payload.  In this case, we pass
+        a dictionary to it with a single key of _friends_ and the value 
+        is the list of friends that we retrieve on the previous line.
         
         > ![Extra Info](../images/reminder.png) You can always use `help`
         > on the method, look it up in PyCharm's inline help, or in the 
         > [Flask](http://flask.pocoo.org/docs/0.10/api/#flask.json.jsonify) 
         > documentation.
     
-## There Is No Secret Ingredient: Testing
-In order to test your API, you'll need two terminal windows open with active
-SSH sessions in your Vagrant VM.  
-- For Mac users, this should be relatively easy.  You can open multiple tabs 
-in the default `terminal` application, or use the excellent iTerm2 for even
-better options.
+### There Is No Secret Ingredient: Testing
+In order to test your API, you'll continue to need two terminal windows open 
+with active SSH sessions in your Vagrant VM - just like we did in exercise 2. 
 
-- Windows users, time for a little bit more pain.  You'll need to have two 
-separate instances of Git Bash running and just position the windows next to 
-each other.  It might not be very clear on how to start multiple instances of 
-the same application in any given version of windows, so this might take a bit
-to get setup.
-
-Once you have two SSH terminal sessions open do the following:
 - In the first terminal session make sure that you've gone to `level-4` and
 then executed `cd` into your subdirectory.
 
@@ -102,17 +99,17 @@ various methods of your API.  Test your first method with the following command:
       "friends": [
         {
           "email": "mike@eikonomega.com",
-          "first_name": "Big Fat",
+          "firstName": "Big Fat",
           "id": "BFP",
-          "last_name": "Panda",
+          "lastName": "Panda",
           "notes": "My bestest friend in all the world.",
           "telephone": "574-213-0726"
         },
         {
           "email": "vdiesel4@supercool.edu",
-          "first_name": "Vin",
+          "firstName": "Vin",
           "id": "VinDi",
-          "last_name": "Diesel",
+          "lastName": "Diesel",
           "notes": "Really annoying guy.  Will never amount to anything.",
           "telephone": "I-HIT-PEOPLE"
         }

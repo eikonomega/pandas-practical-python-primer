@@ -11,7 +11,7 @@ api = flask.Flask(__name__)
 
 
 @api.route('/api/v1/friends', methods=['GET'])
-def get_friends() -> flask.Response:
+def friends() -> flask.Response:
     """
     Return a representation of the collection of friend resources.
 

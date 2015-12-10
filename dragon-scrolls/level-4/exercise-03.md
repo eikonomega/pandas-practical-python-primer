@@ -103,7 +103,5 @@ from other modules of our `friends_api` package.
         
     - If you can't, something isn't quite right. Go back and review the steps
     up to this point until it works for you.
-
     
-
-   
+| [Next Exercise](exercise-04.md)

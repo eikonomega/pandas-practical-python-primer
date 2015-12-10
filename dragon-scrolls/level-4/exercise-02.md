@@ -51,3 +51,5 @@ medium of choice for APIs, so we'll be changing this. For now, however, it
 tells us that our testing HTTP server is running our app successfully.
 
 > ![Reminder](../images/reminder.png) Don't forget to add the module docstring.
+
+| [Next Exercise](exercise-03.md)

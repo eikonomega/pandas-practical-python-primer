@@ -5,21 +5,6 @@ from friends_api.datastore import Datastore
 
 app = Flask(__name__)
 
-@app.before_request
-def connect_to_datastore():
-    """
-    Establish a connection to the datastore and store it on the `g` object.
-    """
-    g.datastore = Datastore()
-
-
-@app.teardown_request
-def disconnect_from_datastore(exception):
-    """
-    Close the connection to the datastore.
-    """
-    del g.datastore
-
 
 @app.before_request
 def connect_to_datastore():
@@ -62,16 +47,6 @@ def specific_friend(id: str) -> Response:
     Returns:
         A flask.Response object.
     """
-<<<<<<< HEAD
-    try:
-        matched_friend = g.datastore.friend(id)
-    except ValueError as error:
-        error_response = make_response(
-            jsonify({"error": str(error)}), 404)
-        return error_response
-    else:
-        return jsonify(matched_friend)
-=======
     friend = g.datastore.friend(id)
     if friend:
         return jsonify(friend)
@@ -79,7 +54,6 @@ def specific_friend(id: str) -> Response:
         response = make_response(
             jsonify({"error": "You have no friends.  LOSER."}), 404)
         return response
->>>>>>> proposed-changes
 
 
 @app.route('/api/v1/friends', methods=['POST'])
@@ -141,13 +115,7 @@ def update_friend(id: str) -> Response:
     try:
         g.datastore.update_friend(id, request_payload)
     except ValueError as error:
-<<<<<<< HEAD
-        response = make_response(
-            jsonify({"error": str(error)}),
-            400)
-=======
         response = make_response(jsonify({"error": str(error)}), 400)
->>>>>>> proposed-changes
         return response
 
     response = make_response(

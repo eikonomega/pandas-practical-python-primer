@@ -1,18 +1,28 @@
-friends = [
+_friends = [
     {
         "id": "BFP",
-        "first_name": "Big Fat",
-        "last_name": "Panda",
+        "firstName": "Big Fat",
+        "lastName": "Panda",
         "telephone": "574-213-0726",
         "email": "mike@eikonomega.com",
         "notes": "My bestest friend in all the world."
     },
     {
         "id": "VinDi",
-        "first_name": "Vin",
-        "last_name": "Diesel",
+        "firstName": "Vin",
+        "lastName": "Diesel",
         "telephone": "I-HIT-PEOPLE",
         "email": "vdiesel4@supercool.edu",
         "notes": "Really annoying guy.  Will never amount to anything."
     }
 ]
+
+
+def friends() -> list:
+    """
+    Provide a list of friends.
+
+    Returns:
+        A `list` containing dictionaries for each friend.
+    """
+    return _friends

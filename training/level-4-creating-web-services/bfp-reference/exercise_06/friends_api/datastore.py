@@ -1,4 +1,4 @@
-friends = [
+_friends = [
     {
         "id": "BFP",
         "firstName": "Big Fat",
@@ -18,6 +18,31 @@ friends = [
 ]
 
 
+def friends() -> list:
+    """
+    Provide a list of friends.
+
+    Returns:
+        A `list` containing dictionaries for each friend.
+    """
+    return _friends
+
+
+def friend(id: str) -> dict:
+    """
+    Provide data on a single friend.
+
+    Args:
+        id: A str of the unique identifier to look for in our list of friends.
+
+    Returns:
+        A dict of data on the designated fried or None if not match is found.
+    """
+    for possible_match in _friends:
+        if id.lower() == possible_match['id'].lower():
+            return possible_match
+
+
 def create_friend(data: dict):
     """
     Create a new friend entry is our datastore of friends.
@@ -25,4 +50,4 @@ def create_friend(data: dict):
     Args:
         data: A dictionary of data for our new friend.
     """
-    friends.append(data)
+    _friends.append(data)

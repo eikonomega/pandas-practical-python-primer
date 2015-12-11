@@ -13,8 +13,8 @@ methods (GET, PUT, PATCH, DELETE) used for in RESTful web services/apis?
 - Add the following function stubs to `friends.py` and `datastore.py`:
     ```python
     # friends.py
-    @app.route('/api/v1/friends', methods=['POST'])
-    def create_friend():
+    @api.route('/api/v1/friends', methods=['POST'])
+    def create_friend() -> flask.Response:
         """
         Create a new friend resource. 
         
@@ -31,55 +31,44 @@ methods (GET, PUT, PATCH, DELETE) used for in RESTful web services/apis?
         Args:
             data: A dictionary of data for our new friend.
         """
-        friends.append(data)
+        _friends.append(data)
     ```
-    
-    - Notice that both of our functions have the same name.  If this 
-    is confusing to you, remember the different contexts - one belongs
-    to the `friends` module and the other to the `datastore` module.
-      
-    - So,in reality, we are defining `friends.create_friend` and 
-    `datastore.create_friend`.  You'll see how they related to each other
-    shortly.
-    
-    > ![Alternatively](../images/reminder.png) If having the same 
-    name bugs you, go ahead and pick a different name for one of the functions.
-    There is no magic to having matching names between them.
 
 - The first thing our `friends.create_friend` function needs to do is get access 
 to the JSON in the HTTP request in order to construct a new friend resource.  
 You can do so by replacing `pass` with the following code:
 
     ```python
-    request_payload = request.get_json()
+    request_payload = flask.request.get_json()
     ```
-    - The `request` object is a globally scoped name/variable whose value is 
-    always bound to the current HTTP request being handled by the program. Yes,
-    that is a mouthful.  The key to remember is that always points to the 
-    HTTP request currently being handled by the web server.
-    
-    - Because it is a globally scoped name, you can access it from within any
-    function, as long as you have imported it from the `flask` library.
-    
-        > ![reminder](../images/reminder.png) Remember to import the `request`
-        > object from the flask library.
+    - The `request` object is a special variable whose value is 
+    always bound to the current HTTP request being handled by the program. 
          
 - Now that you have the JSON payload, you pass that along to the  
 `datastore.create_friend` function to create the new resource. Then wrap up
 the function by returning a success message to the client:
 
     ```python
-    request_payload = request.get_json()
+    @api.route('/api/v1/friends', methods=['POST'])
+    def create_friend() -> flask.Response:
+        """
+        Create a new friend resource. 
+        
+        Utilize a JSON representation in the request object to create
+        a new friend resource.
+        """
+        request_payload = flask.request.get_json()
+        
+        datastore.friends.append(request_payload)
     
-    datastore.friends.append(request_payload)
-
-    response = make_response(jsonify({"message": "Friend resource created."}),
-                             201)
-    return response
+        response = flask.make_response(
+                flask.jsonify({"message": "Friend resource created."}), 201)
+        return response
     ```
     
     - Notice here how we delegate from `friends.create_friend` to 
     `datastore.create_friend` to actually add the friend to our list.
+    
     - Also, note how we also use `make_response` here to override
     the standard `200` response code with `201` which means a new resource
     was successfully created.

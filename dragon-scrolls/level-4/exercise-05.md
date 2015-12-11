@@ -60,6 +60,18 @@ that will return information on a single friend based on a `id` parameter:
                 original_response, 404)     
             return error_response
     ```
+    
+    - Notice that both of our functions have the same name.  If this 
+    is confusing to you, remember the different contexts - one belongs
+    to the `friends` module and the other to the `datastore` module.
+      
+    - So,in reality, we are defining `friends.friend` and 
+    `datastore.friend`.  You'll see how they related to each other
+    shortly.
+    
+    > ![Alternatively](../images/reminder.png) If having the same 
+    name bugs you, go ahead and pick a different name for one of the functions.
+    There is no magic to having matching names between them.
 
 - Notice that in the `@api.route` decorator of our new function that there 
 is a `<id>` added to the end of the URL.  Whenever a segment of the URL is

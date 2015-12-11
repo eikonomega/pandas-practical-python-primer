@@ -23,8 +23,8 @@ for debugging purposes.
 - Update the `create_friend` function to look like this:
 
     ```python
-    @app.route('/api/v1/friends', methods=['POST'])
-    def create_friend() -> Response:
+    @api.route('/api/v1/friends', methods=['POST'])
+    def create_friend() -> flask.Response:
         """
         Create a new friend resource.
     
@@ -36,19 +36,19 @@ for debugging purposes.
         """
         import sys
         try:    
-            request_payload = request.get_json()
+            request_payload = flask.request.get_json()
             datastore.create_friend(request_payload)
         except Exception as error:
-            response = make_response(
-                jsonify(
+            response = flask.make_response(
+                flask.jsonify(
                     {"errorType": str(sys.exc_info()[0]),
                      "errorMessage": str(sys.exc_info()[1]),
                      "errorLocation": sys.exc_info()[2].tb_lineno}),
-                    400)
+                400)
             return response
         else:
-            response = make_response(
-                jsonify({"message": "Friend resource created."}), 201)
+            response = flask.make_response(
+                flask.jsonify({"message": "Friend resource created."}), 201)
             return response
     ```
     

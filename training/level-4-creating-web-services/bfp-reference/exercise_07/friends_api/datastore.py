@@ -1,4 +1,4 @@
-friends = [
+_friends = [
     {
         "id": "BFP",
         "firstName": "Big Fat",
@@ -18,38 +18,36 @@ friends = [
 ]
 
 
+def friends() -> list:
+    """
+    Provide a list of friends.
+
+    Returns:
+        A `list` containing dictionaries for each friend.
+    """
+    return _friends
+
+
+def friend(id: str) -> dict:
+    """
+    Provide data on a single friend.
+
+    Args:
+        id: A str of the unique identifier to look for in our list of friends.
+
+    Returns:
+        A dict of data on the designated fried or None if not match is found.
+    """
+    for possible_match in _friends:
+        if id.lower() == possible_match['id'].lower():
+            return possible_match
+
+
 def create_friend(data: dict):
     """
     Create a new friend entry is our datastore of friends.
 
     Args:
-        data: A dictionary of data for our new friend.  Must have
-            the following elements: ['id', 'firstName', 'lastName',
-            'telephone', 'email', 'notes']
-
-    Raises:
-        ValueError: If data is None or doesn't contain all required
-            elements.
+        data: A dictionary of data for our new friend.
     """
-    if data is None:
-        raise ValueError(
-            "`None` was received when a dict was expected during "
-            "the attempt to create a new friend resource.")
-
-    required_elements = set(friends[0].keys())
-    if not required_elements.issubset(data):
-        raise ValueError("Some of the data required to create a friend "
-                         "was not present.  The following elements "
-                         "must be present to create a friend: {}".format(
-            required_elements))
-
-    for element in data:
-        if element not in required_elements:
-            data.pop(element)
-
-    for friend in friends:
-        if data['id'].lower() == friend['id'].lower():
-            raise ValueError("A friend already exists with the "
-                             "`id` specified: {}".format(data['id']))
-
-    friends.append(data)
+    _friends.append(data)

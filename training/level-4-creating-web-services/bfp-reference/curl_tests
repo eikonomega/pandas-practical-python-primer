@@ -16,6 +16,9 @@ POST /api/v1/friends
     Missing JSON Element
         curl 127.0.0.1:5000/api/v1/friends -X POST -H "content-type:application/json" -d '{"firstName": "Donald", "lastName": "Duck", "telephone": "i-love-ducks", "email": "donald@disney.com", "notes": "A grumpy, easily agitated duck."}'
 
+    Extraneous Data
+        curl 127.0.0.1:5000/api/v1/friends -X POST -H "content-type:application/json" -d '{"id":"dDuck", "firstName": "Donald", "lastName": "Duck", "telephone": "i-love-ducks", "email": "donald@disney.com", "notes": "A grumpy, easily agitated duck.", "extra": "Information we do not want."}'
+
 PATCH /api/v1/friends/<id>
     Valid
         curl 127.0.0.1:5000/api/v1/friends/bfp -X PATCH -H "content-type:application/json" -d '{"id":"bfp", "firstName": "Really Really Fat", "lastName": "Panda", "telephone": "i-love-tacos", "email": "mike@eikonomega.com", "notes": "A Panda.  Getting fatter pound at a time."}'

@@ -3,6 +3,7 @@ This module will provide a Flask application.
 """
 
 import flask
+from werkzeug.exceptions import BadRequest
 
 from friends_api import datastore
 
@@ -65,17 +66,19 @@ def create_friend() -> flask.Response:
     Returns:
         A flask.Response object.
     """
-    import sys
     try:
         request_payload = flask.request.get_json()
         datastore.create_friend(request_payload)
-    except Exception as error:
+    except BadRequest as error:
         response = flask.make_response(
             flask.jsonify(
-                {"errorType": str(sys.exc_info()[0]),
-                 "errorMessage": str(sys.exc_info()[1]),
-                 "errorLocation": sys.exc_info()[2].tb_lineno}),
-            400)
+                {"error": "JSON payload contains syntax errors. "
+                          "Please fix and try again."}),
+                400)
+        return response
+    except ValueError as error:
+        response = flask.make_response(
+            flask.jsonify({"error": str(error)}), 400)
         return response
     else:
         response = flask.make_response(

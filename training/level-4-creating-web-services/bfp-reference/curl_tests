@@ -29,6 +29,9 @@ PATCH /api/v1/friends/<id>
     Syntax Error in JSON
         curl 127.0.0.1:5000/api/v1/friends/bfp -X PATCH -H "content-type:application/json" -d '{"id":"bfp", "firstName": "Really Really Fat" "lastName": "Panda", "telephone": "i-love-tacos", "email": "mike@eikonomega.com", "notes": "A Panda.  Getting fatter pound at a time."}'
 
+    Non-Existent Resource
+        curl 127.0.0.1:5000/api/v1/friends/na -X PATCH -H "content-type:application/json" -d '{"id":"bfp", "firstName": "Really Really Fat", "lastName": "Panda", "telephone": "i-love-tacos", "email": "mike@eikonomega.com", "notes": "A Panda.  Getting fatter pound at a time."}'
+
 DELETE /api/v1/friends/<id>
     Valid
         curl http://127.0.0.1:5000/api/v1/friends/dduck -X DELETE

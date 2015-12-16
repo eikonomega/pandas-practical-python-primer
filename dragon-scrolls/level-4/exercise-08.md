@@ -4,15 +4,15 @@ I hope that you are starting to get the hang of adding functionality to your
 API by now.  In this exercise, we'll be adding the ability to update
 existing friend resources.
 
-### There Is No Secret Ingredient: Creating a `update_friend` function in 
+### There Is No Secret Ingredient: Creating an `update_friend` function in 
 `friends` and `datastore` modules.
 
 Here's what the functions should look like:
 
 ```python
 # friends.py
-@app.route('/api/v1/friends/<id>', methods=['PATCH'])
-def update_friend(id: str) -> Response:
+@api.route('/api/v1/friends/<id>', methods=['PATCH'])
+def update_friend(id: str) -> flask.Response:
     """
     Update an existing friend resource.
 
@@ -26,25 +26,25 @@ def update_friend(id: str) -> Response:
         A flask.Response object.
     """
     try:
-        request_payload = request.get_json()
+        request_payload = flask.request.get_json()
     except BadRequest as error:
-        response = make_response(
-            jsonify({"error": "JSON payload contains syntax errors. "
-                              "Please fix and try again."}),
+        response = flask.make_response(
+            flask.jsonify({"error": "JSON payload contains syntax errors. "
+                           "Please fix and try again."}),
             400)
         return response
 
     try:
         datastore.update_friend(id, request_payload)
     except ValueError as error:
-        response = make_response(
-            jsonify({"error": str(error)}),
+        response = flask.make_response(
+            flask.jsonify({"error": str(error)}),
             400)
         return response
-
-    response = make_response(
-        jsonify({"message": "Friend resource updated."}), 201)
-    return response
+    else:
+        response = flask.make_response(
+            flask.jsonify({"message": "Friend resource updated."}), 200)
+        return response
     
 # datastore.py
 def update_friend(id: str, data: dict):
@@ -62,38 +62,68 @@ def update_friend(id: str, data: dict):
             "`None` was received when a dict was expected during "
             "the attempt to update an existing friend resource.")
 
-    for friend in friends:
-        if id.lower() == friend['id'].lower():
-            friend.update(data)
-            return
-
-    raise ValueError("No existing friend was found matching id: {}".format(id))
+    try:
+        friend(id).update(data)
+    except AttributeError:
+        raise ValueError(
+            "No existing friend was found matching id: {}".format(id))
 ```
 
-- Notice how similar `friends.update_friend` and `friends.create_friend` are.
-The only real differences are in the `@app.route` decorator and the call to
-`datastore.update_friend`.
-    - In the decorator, we are using the same URL template as we did for 
+- There is a substantial amount of similarity between `friends.create_friend()`
+and `friends.update_friend()`.
+
+    - In the function decorator, we are using the same URL template as we did for 
     `specific_friend`.  We've modified the `methods` parameter to indicate
-    that the decorated function should handle `PATCH` HTTP requests. PATCH` 
+    that the decorated function should handle `PATCH` HTTP requests. PATCH 
     requests will route to this new method, while `GET` requests to the 
     same url will route to `specific_friend`.  Pretty cool!
-    - Also notice that we are also capturing the `<id>` portion of the url and
-    passing it `datastore.update_friend`.
+    
+        - Also notice that we are also capturing the `<id>` portion of the url and
+        passing it `datastore.update_friend`.
+    
+    - Just like before, we are checking for a `BadRequest` exception to
+    be raised from `flask.request.get_json()`.
+    
+    - Instead of calling `datastore.create_friend()` we call 
+    `datastore.update_friend()`.  We still check for `ValueError` 
+    exceptions from this call and return 400 errors if the arise.
+    
+    > Notice how there is a separate exception clause?
+    START HERE
+    
+    - Otherwise, we construct a response and return it.  Notice that we
+    don't have to use `make_response` because the default 200 status code
+    is appropriate in this case.
 
 - There is also a significant degree of crossover between 
 `datastore.update_friend` and `datastore.create_friend`.
+    
     - We don't check to see if all the elements of a new friend entry are in 
     the payload.  This is unnecessary because the nature of a `PATCH` update
     is to allow for variable updates of an existing resource.  Requiring that
     all data elements of a record be present in the request would mean that
     we would only allow full updates of existing resources.
 
-    - Instead of appending a new record to the `friends` list, we search for
-    a matching record and then use the `dict.update` method to update the
-    it with the JSON payload from the HTTP request.
+    - You may have except and `if/else` construct to be used here and by surprised
+    that we've used `try/except` instead.
+        - As a general practice, the Python community embraces an "it's easier
+        to ask forgiveness than permission" type of programming style.  This
+        is in contrast to a "look before you leap" style.
+        
+        - We could have written the same functionality like this:
+        
+            ```python
+            ...
+            if data is None:
+            raise ValueError(
+                "`None` was received when a dict was expected during "
+                "the attempt to update an existing friend resource.")
     
-    - If no matching record is found, we raise a `ValueError` exception.
+            matched_friend = friend(id)
+            if matched_friend:
+                matched_friend.update(data)
+            ...
+            ```
     
     > ![Extra Info](../images/information.png) The `update` method of `dict`
     > objects can take another `dict` as an argument.  If matching keys are

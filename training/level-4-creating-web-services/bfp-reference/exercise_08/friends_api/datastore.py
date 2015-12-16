@@ -1,4 +1,4 @@
-friends = [
+_friends = [
     {
         "id": "BFP",
         "firstName": "Big Fat",
@@ -18,41 +18,66 @@ friends = [
 ]
 
 
-def create_friend(data: dict):
+def friends() -> list:
     """
-    Create a new friend entry is our datastore of friends.
+    Provide a list of friends.
+
+    Returns:
+        A `list` containing dictionaries for each friend.
+    """
+    return _friends
+
+
+def friend(id: str) -> dict:
+    """
+    Provide data on a single friend.
 
     Args:
-        data: A dictionary of data for our new friend.  Must have
-            the following elements: ['id', 'firstName', 'lastName',
-            'telephone', 'email', 'notes']
+        id: A str of the unique identifier to look for in our list of friends.
+
+    Returns:
+        A dict of data on the designated fried or None if not match is found.
+    """
+    for possible_match in _friends:
+        if id.lower() == possible_match['id'].lower():
+            return possible_match
+
+
+def create_friend(data: dict):
+    """
+    Create a new friend entry in our datastore of friends.
+
+    Args:
+        data: A dictionary of data for our new friend.
 
     Raises:
-        ValueError: If data is None, doesn't contain all required
-            elements, or a duplicate id already exists in `friends`.
+        ValueError: If `data` is None.
     """
     if data is None:
         raise ValueError(
             "`None` was received when a dict was expected during "
             "the attempt to create a new friend resource.")
 
-    required_elements = set(friends[0].keys())
+    required_elements = set(_friends[0].keys())
     if not required_elements.issubset(data):
-        raise ValueError("Some of the data required to create a friend "
-                         "was not present.  The following elements "
-                         "must be present to create a friend: {}".format(
-            required_elements))
+        raise ValueError(
+            "Some of the data elements required to create a friend "
+            "were not present.  The following elements "
+            "must be present to create a friend: {}".format(
+                required_elements))
 
-    for element in data:
+    # BONUS BUG
+    # Use dict.keys() method to get a set of the keys.
+    # Then remove non-standard data points if present.
+    for element in data.copy():
         if element not in required_elements:
             data.pop(element)
 
-    for friend in friends:
-        if data['id'].lower() == friend['id'].lower():
-            raise ValueError("A friend already exists with the "
-                             "`id` specified: {}".format(data['id']))
+    if friend(data['id']):
+        raise ValueError("A friend already exists with the "
+                         "`id` specified: {}".format(data['id']))
 
-    friends.append(data)
+    _friends.append(data)
 
 
 def update_friend(id: str, data: dict):
@@ -70,11 +95,14 @@ def update_friend(id: str, data: dict):
             "`None` was received when a dict was expected during "
             "the attempt to update an existing friend resource.")
 
-    #TODO: Remove extraneous data elements.
+    # LBYL Model
+    # matched_friend = friend(id)
+    # if matched_friend:
+    #     matched_friend.update(data)
 
-    for friend in friends:
-        if id.lower() == friend['id'].lower():
-            friend.update(data)
-            return
-
-    raise ValueError("No existing friend was found matching id: {}".format(id))
+    # EAFP Model: Pythonic Way
+    try:
+        friend(id).update(data)
+    except AttributeError:
+        raise ValueError(
+            "No existing friend was found matching id: {}".format(id))
